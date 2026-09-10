@@ -570,13 +570,16 @@ function render(){
       const t = EVENT_TYPES[u.ev.type];
       const dt = u.dt;
       const wd = ['일','월','화','수','목','금','토'][dt.getDay()];
-      // 🌟 약속/회식처럼 당사자가 있는 일정은 "이름 - 메모" 형태로 표시
-      let memoText;
-      if(t.needsPerson){
+      /// 🌟 시간 및 당사자/메모 조합 로직
+      const timeStr = u.ev.time ? u.ev.time + ' ' : '';
+      let memoText = '';
+
+      if (t.needsPerson) {
         const p = personLabel(u.ev.person);
-        memoText = u.ev.memo ? (p + ' - ' + u.ev.memo) : p;
+        const detail = u.ev.memo ? (timeStr + u.ev.memo).trim() : u.ev.time;
+        memoText = detail ? (p + ' - ' + detail) : p;
       } else {
-        memoText = u.ev.memo || '';
+        memoText = (timeStr + (u.ev.memo || '')).trim();
       }
       upHtml += '<div class="up-item">'
         + '<div class="up-date">'+(dt.getMonth()+1)+'/'+dt.getDate()+'<b>'+wd+'</b></div>'
